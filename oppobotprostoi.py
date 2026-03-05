@@ -1,14 +1,22 @@
 import telebot
 import os
+from flask import Flask
+import threading
 import webbrowser
 
-# Получаем токен из переменной окружения
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 if TOKEN is None:
     raise ValueError("❌ Переменная окружения TELEGRAM_TOKEN не установлена!")
 
-# Создаём объект бота
+
 bot = telebot.TeleBot(TOKEN)
+
+# Минимальный HTTP сервер для Render
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    return "Bot is running!"  # Render видит, что сервис живой
 
 user_lang = {}
 
@@ -240,4 +248,13 @@ def unknown_message(message):
             "Егер сұрағыңыз басқа болса, колл-орталыққа +7 707 688 10 10 нөміріне хабарласыңыз."
         )
 
-bot.polling(non_stop=True)
+# Функция запуска бота
+def run_bot():
+    bot.infinity_polling()  # Будет работать постоянно
+
+# Запуск бота в отдельном потоке
+threading.Thread(target=run_bot).start()
+
+if __name__ == "__main__":
+    # Render Free Web Service использует host 0.0.0.0 и порт 10000
+    app.run(host="0.0.0.0", port=10000)
