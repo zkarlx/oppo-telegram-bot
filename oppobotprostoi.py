@@ -130,7 +130,7 @@ def faq_answers(message):
             )
         elif message.text == "4":
             bot.send_message(message.chat.id,
-                "Комплектация телефона указана в разделе «Особенности и дополнительная информация»."
+                'Комплектация телефона указана в разделе "Хараектеристики" ->  "Особенности и дополнительная информация".'
             )
         elif message.text == "5":
             bot.send_message(message.chat.id,
@@ -257,4 +257,5 @@ threading.Thread(target=run_bot).start()
 
 if __name__ == "__main__":
     # Render Free Web Service использует host 0.0.0.0 и порт 10000
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
